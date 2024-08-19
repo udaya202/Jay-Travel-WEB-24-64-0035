@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jay Tours</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome CDN -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+
+    <style>
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #00aaff;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Welcome Message Styles */
+        #welcome-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .message-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .message-box p {
+            font-size: 18px;
+            color: #333;
+            margin: 0;
+        }
+
+
+        /* Custom styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #141414;
+        }
+
+        .navbar-brand {
+            color: #ff7800;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #ff7800;
+        }
+
+        .navbar-nav .nav-link:active {
+            color: #ff7800;
+        }
+
+        /* Header Image */
+        .header-image {
+            background-image: url('main.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 500px;
+        }
+
+        .header-image h1 {
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .top-destinations .destination {
+            margin-bottom: 20px;
+        }
+
+        .destination-label {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #0e0d0d;
+        }
+
+        .top-destinations img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Team Leads Section */
+        .team-leads .team-member {
+            padding-left: 30px;
+        }
+
+        .team-leads img {
+            width: 100%;
+            height: 80%;
+            object-fit: fill;
+        }
+
+        .team-leads h4 {
+            margin-top: 10px;
+        }
+
+        /* Counters Section */
+        .counters {
+            text-align: center;
+            padding: 60px 0;
+            background-color: #022332;
+            color: #fff;
+        }
+
+        .counters h3 {
+            margin: 0;
+            font-family: Georgia, serif;
+            font-size: 50px;
+            color: #ff7800;
+        }
+
+        .counters p {
+            font-size: 18px;
+            color: #ececec;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 50px 0;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+
+        .testimonials h2 {
+            color: #ff7800;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .testimonial-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .testimonial-box h4 {
+            font-size: 18px;
+            color: #4e75eb;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .testimonial-box p {
+            color: #888;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .testimonial-box p small {
+            color: #a2a2a2;
+        }
+
+        .testimonial-box p {
+            font-weight: bold;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .testimonial-box p:last-child {
+            font-style: normal;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Blue line at the bottom */
+        .testimonial-box::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #4169e1;
+            /* Blue color */
+        }
+
+        /* Read More Link */
+        .testimonial-box a {
+            color: #4169e1;
+            text-decoration: none;
+        }
+
+        .testimonial-box a:hover {
+            text-decoration: underline;
+        }
+
+        /* Contact Form Section */
+        .contact-form {
+            padding: 50px 0;
+            background-color: #fff;
+            text-align: center;
+        }
+
+        .contact-form h2 {
+            color: #ff7800;
+            margin-bottom: 30px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .contact-form .form-control {
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            height: 45px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .contact-form .form-check-label {
+            margin-left: 5px;
+            font-size: 14px;
+        }
+
+        .contact-form button {
+            background-color: #00aaff;
+            color: #fff;
+            border: none;
+            padding: 10px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            /* Make the button full-width */
+        }
+
+        .contact-form button:hover {
+            background-color: #008ecc;
+        }
+
+        /* Centering the form */
+        form {
+            max-width: 100px;
+            height: 300px;
+            margin: 0 auto;
+        }
+
+        /* Footer Section */
+        .footer-section {
+            background-color: #022332;
+            color: #dddcdc;
+            padding: 40px 0;
+        }
+
+        .footer-section h5 {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section a {
+            color: #b0afaf;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-section .list-unstyled {
+            padding-left: 0;
+        }
+
+        .footer-section .list-unstyled li {
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .footer-section-contact .contact-info p {
+            margin: 0;
+            font-size: 12px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-section-contact .contact-info i {
+            margin-right: 10px;
+            color: #ff7800;
+        }
+
+        .footer-section .row div {
+            margin-bottom: 20px;
+        }
+
+        .footer-bottom {
+            background-color: #000000;
+            padding: 25px 0;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .footer-section .list-unstyled {
+            padding-left: 0;
+        }
+
+        .footer-section .list-unstyled li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Layout for smaller screens */
+        @media (max-width: 768px) {
+
+            .footer-section .col-md-2,
+            .footer-section .col-md-4 {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+    
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Welcome Message -->
+    <div id="welcome-message">
+        <div class="message-box">
+            <p>Welcome to Jay Tours!</p>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Jay Tours</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Testimonials</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Portfolio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contacts</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="header-image d-flex align-items-center justify-content-center text-white">
+        <h1>Jay Tours</h1>
+    </header>
+
+    <!-- Top Destinations Section -->
+    <section class="container text-center my-5">
+        <h2>Top Destinations</h2>
+        <div class="row top-destinations justify-content-center">
+            <!-- Destination 1: Sri Lanka -->
+            <div class="col-md-2">
+                <div class="destination">
+                    <p class="destination-label">Sri Lanka</p>
+                    <img src="SriLanka.jpg" alt="Sri Lanka">
+                </div>
+            </div>
+            <!-- Destination 2: Rome -->
+            <div class="col-md-2">
+                <div class="destination">
+                    <p class="destination-label">Rome</p>
+                    <img src="Rome.jpg" alt="Rome">
+                </div>
+            </div>
+            <!-- Destination 3: Maldives -->
+            <div class="col-md-2">
+                <div class="destination">
+                    <p class="destination-label">Maldives</p>
+                    <img src="Maldives.jpg" alt="Maldives">
+                </div>
+            </div>
+            <!-- Destination 4: Switzerland -->
+            <div class="col-md-2">
+                <div class="destination">
+                    <p class="destination-label">Switzerland</p>
+                    <img src="Switzerland.jpg" alt="Switzerland">
+                </div>
+            </div>
+            <!-- Destination 5: Thailand -->
+            <div class="col-md-2">
+                <div class="destination">
+                    <p class="destination-label">Thailand</p>
+                    <img src="Thailand.jpg" alt="Thailand">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Team Leads Section -->
+    <section class="container text-center my-5">
+        <h2>Our Team Leads</h2>
+        <p>Teamwork is the ability to work together toward a common vision. The ability to direct<br>
+            individual accomplishments toward organizational objectives. It is the fuel that allows
+            <br>common people to attain uncommon results.
+        </p>
+
+        <div class="row team-leads justify-content-center">
+            <div class="col-md-3 col-sm-6 team-member">
+                <img src="HugoSilva.jpg" alt="Hugo Silva">
+                <h4>Hugo Silva</h4>
+            </div>
+            <div class="col-md-3 col-sm-6 team-member">
+                <img src="Imanoli Arias.jpg" alt="Imanoli Arias">
+                <h4>Imanoli Arias</h4>
+            </div>
+            <div class="col-md-3 col-sm-6 team-member">
+                <img src="JavierBardem.jpg" alt="Javier Bardem">
+                <h4>Javier Bardem</h4>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="counters">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>250k+</h3>
+                    <p>Happy Clients</p>
+                </div>
+                <div class="col-md-3">
+                    <h3>800</h3>
+                    <p>Weekly Reservations</p>
+                </div>
+                <div class="col-md-3">
+                    <h3>150</h3>
+                    <p>Travel Partners</p>
+                </div>
+                <div class="col-md-3">
+                    <h3>15</h3>
+                    <p>Branches</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2>Overheard from Travelers</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-3 testimonial-box">
+                    <h4>Hotel Eucalyptus</h4>
+                    <p><small>in Greece</small></p>
+                    <p>“We booked Hotel Eucalyptus through Jay after reading a handful of reviews, and it was easily the
+                        best decision we made... <a href="#">more</a>”</p>
+                    <p><small>- Joyce from Canada</small></p>
+                </div>
+                <div class="col-md-3 testimonial-box">
+                    <h4>Holiday Inn Resort Batam</h4>
+                    <p><small>in Indonesia</small></p>
+                    <p>“Thanks Jay for letting me change room without charge and rebate the difference. Nice staff at
+                        Agoda and Holiday Inn!... <a href="#">more</a>”</p><BR>
+                    <p><small>- Andy from Singapore</small></p>
+                </div>
+                <div class="col-md-3 testimonial-box">
+                    <h4>Hotel Granvia Kyoto</h4>
+                    <p><small>in Japan</small></p>
+                    <p>“Our family was traveling via bullet train between cities in Japan with our luggage - the
+                        location for this hotel made that... <a href="#">more</a>”</p>
+                    <p><small>- Diane from the United States</small></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form Section -->
+    <section class="contact-form">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <form class="mx-auto" style="max-width: 400px;"> <!-- Centering the form -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" placeholder="First Name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" placeholder="Last Name">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <input type="email" class="form-control" placeholder="E-mail">
+                </div>
+                <div class="mb-3">
+                    <input type="tel" class="form-control" placeholder="Phone Number">
+                </div>
+                <div class="form-check mb-3 text-start d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="newsletter">
+                    <label class="form-check-label ms-1" for="newsletter">
+                        <!-- Adjusted margin using Bootstrap class -->
+                        Subscribe to our newsletter
+                    </label>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    <h5>HELP</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Terms of Use</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h5>ABOUT US</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h5>DESTINATIONS</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Countries</a></li>
+                        <li><a href="#">Cities</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h5>PARTNER WITH US</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Properties</a></li>
+                        <li><a href="#">Affiliates</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-section-contact">
+                        <div class="contact-info">
+                            <p><i class="fas fa-phone-alt"></i> +94 112 875 965</p>
+                            <p><i class="fas fa-phone-alt"></i> +94 115 879 568</p>
+                            <p><i class="fas fa-map-marker-alt"></i> No. 056, Havelock Town, Colombo 05, Sri Lanka</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container text-center">
+                <p>&copy; 2020 - SLIIT WEB DEVELOPMENT - All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+
+     <!--Input Validation-->
+    <script>
+        $('form').submit(function (e) {
+            let isValid = true;
+            $('input[type="text"], input[type="email"], input[type="tel"]').each(function () {
+                if ($(this).val() === '') {
+                    isValid = false;
+                    $(this).css('border', '2px solid red');
+                } else {
+                    $(this).css('border', '1px solid #ccc');
+                }
+            });
+            if (!isValid) e.preventDefault();
+        });
+
+    </script>
+
+    <!--Loading Screen-->
+    <script>
+        $(window).on('load', function () {
+            // Hide the loading screen first
+            $('#loading-screen').fadeOut('slow', function () {
+                // After loading screen fades out, show the welcome message
+                $('#welcome-message').fadeIn();
+
+                // Automatically hide the welcome message after 5 seconds
+                setTimeout(function () {
+                    $('#welcome-message').fadeOut();
+                }, 5000); // 5000 milliseconds = 5 seconds
+            });
+
+            // Hide the welcome message if the user clicks outside of it
+            $('#welcome-message').on('click', function (e) {
+                if (!$(e.target).closest('.message-box').length) {
+                    $('#welcome-message').fadeOut();
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>
